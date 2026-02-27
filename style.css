@@ -1,43 +1,25 @@
-/* Custom Styles */
-.nav-btn.active {
-    background: white;
-    color: #1e293b;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+body {
+    font-family: sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .slot {
     touch-action: none;
-    -webkit-tap-highlight-color: transparent;
-}
-
-/* ซ่อน Scrollbar */
-::-webkit-scrollbar { display: none; }
-
-/* ทำให้หน้าจอไม่เลื่อนเวลาลากนิ้ว */
-body {
-    overscroll-behavior-y: contain;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(0.5);
 }
 
 .subject-item.active {
-    background-color: #F1F5F9;
-    border-color: #E2E8F0;
-    transform: scale(1.02);
+    border-color: #cbd5e1;
+    background-color: #f8fafc;
+    transform: scale(0.98);
 }
 
-/* อนิเมชั่นตอนสลับหน้า */
-.animate-fade {
-    animation: fadeIn 0.3s ease-out;
+input[type="date"] {
+    -webkit-appearance: none;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+/* แก้ไขข้อความในช่อง Input ให้เห็นเต็ม */
+#userName {
+    line-height: 1.2;
+    padding: 4px 0;
 }
