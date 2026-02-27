@@ -3,61 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Study Flow Pro</title>
+    <title>Study Flow</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-[#F8FAFC] font-['Inter'] antialiased">
+<body class="bg-slate-50 p-4">
 
-    <div class="max-w-md mx-auto min-h-screen flex flex-col p-6 pb-24">
+    <div class="max-w-md mx-auto space-y-4">
         
-        <nav class="flex gap-2 mb-8 bg-slate-100 p-1.5 rounded-3xl">
-            <button onclick="switchTab('track')" class="nav-btn active flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all">Track</button>
-            <button onclick="switchTab('history')" class="nav-btn flex-1 py-3 text-xs font-black uppercase tracking-widest rounded-2xl transition-all text-slate-400">History</button>
-        </nav>
-
-        <div id="track-page" class="space-y-6">
-            <div id="capture-area" class="bg-white p-8 rounded-[3rem] shadow-sm border border-slate-100">
-                <header class="mb-8">
-                    <input type="text" id="userName" placeholder="เขียนชื่อตรงนี้..." class="w-full text-3xl font-black text-slate-800 placeholder:text-slate-200 outline-none mb-2 border-none bg-transparent">
-                    <div class="flex justify-between items-end">
-                        <input type="date" id="datePicker" class="text-xs font-bold text-indigo-500 uppercase bg-transparent border-none outline-none">
-                        <div class="text-right">
-                            <div class="text-[10px] font-black text-slate-300 uppercase tracking-widest">Total Focus</div>
-                            <div id="totalHours" class="text-4xl font-black text-slate-800 tracking-tighter">0h 00m</div>
-                        </div>
-                    </div>
-                </header>
-
-                <div id="time-grid" class="space-y-1">
-                    </div>
-
-                <div id="subject-summary" class="mt-8 pt-6 border-t border-slate-50 flex flex-wrap gap-4">
-                    </div>
-            </div>
-
-            <div class="space-y-4">
-                <div id="subject-list" class="space-y-2">
-                    </div>
-                <button onclick="addNewSubjectPrompt()" class="w-full py-4 rounded-3xl border-2 border-dashed border-slate-200 text-slate-400 font-bold text-sm hover:bg-white transition-all">+ Add Subject</button>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <button onclick="saveToHistory()" class="py-4 bg-slate-800 text-white rounded-[2rem] font-black text-sm shadow-lg shadow-slate-200 active:scale-95 transition-all">SAVE RECORD</button>
-                    <button onclick="downloadImage()" class="py-4 bg-indigo-600 text-white rounded-[2rem] font-black text-sm shadow-lg shadow-indigo-100 active:scale-95 transition-all">EXPORT PNG</button>
+        <div id="capture-area" class="bg-white p-6 rounded-[2.5rem] shadow-sm">
+            <header class="mb-6">
+                <input type="text" id="userName" placeholder="เขียนชื่อ..." class="text-2xl font-black outline-none border-none bg-transparent w-full">
+                <div class="flex justify-between items-center mt-2">
+                    <input type="date" id="datePicker" class="text-xs font-bold text-slate-400 border-none outline-none bg-transparent">
+                    <div id="totalHours" class="text-3xl font-black text-slate-800">0h 00m</div>
                 </div>
-            </div>
+            </header>
+
+            <div id="time-grid" class="space-y-1"></div>
+
+            <div id="subject-summary" class="mt-4 flex flex-wrap gap-2 text-[10px] font-bold"></div>
         </div>
 
-        <div id="history-page" class="hidden">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-black text-slate-800 uppercase italic">History</h2>
-                <button onclick="clearAllHistory()" class="text-[10px] font-black text-red-400 uppercase">Clear All</button>
-            </div>
-            <div id="history-list" class="space-y-4"></div>
+        <div class="space-y-2">
+            <div class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-2">Select Subject</div>
+            <div id="subject-list" class="grid grid-cols-1 gap-2"></div>
+            <button onclick="addNewSubjectPrompt()" class="w-full py-3 border-2 border-dashed border-slate-200 rounded-2xl text-slate-300 font-bold text-xs">+ Add New Subject</button>
         </div>
 
+        <div class="grid grid-cols-2 gap-3">
+            <button onclick="saveToHistory()" class="bg-slate-800 text-white py-4 rounded-3xl font-black text-sm">SAVE</button>
+            <button onclick="downloadImage()" class="bg-indigo-600 text-white py-4 rounded-3xl font-black text-sm">EXPORT</button>
+        </div>
+
+        <div class="mt-8">
+            <div class="flex justify-between items-center mb-4 px-2">
+                <h2 class="font-black text-slate-800">HISTORY</h2>
+                <button onclick="clearAllHistory()" class="text-[10px] text-red-400 font-bold">CLEAR ALL</button>
+            </div>
+            <div id="history-list" class="space-y-3"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
