@@ -4,7 +4,7 @@ const aestheticPales = ['#FFDEB4', '#B2A4FF', '#FFB7B2', '#B2F2BB', '#D0EAFF', '
 
 document.addEventListener('DOMContentLoaded', () => {
     const grid = document.getElementById('gridBody');
-    // สร้างตาราง 04:00 - 23:00
+    // Generate Time Matrix 04:00 - 23:00
     for (let h = 4; h <= 23; h++) {
         const row = document.createElement('div');
         row.className = 'row';
@@ -68,7 +68,7 @@ function downloadPlanner() {
         borderRadius: 40
     }).then(canvas => {
         const a = document.createElement('a');
-        a.download = `StudySummary.png`;
+        a.download = `StudySummary_${new Date().toLocaleDateString()}.png`;
         a.href = canvas.toDataURL();
         a.click();
         rows.forEach(r => r.classList.remove('hide-row'));
@@ -76,28 +76,31 @@ function downloadPlanner() {
 }
 
 function toggleDarkMode() {
-    const body = document.getElementById('bodyApp');
-    body.classList.toggle('dark-mode');
+    document.getElementById('bodyApp').classList.toggle('dark-mode');
 }
 
 function saveToHistory() {
     const name = document.querySelector('.name-field').value || "Guest";
-    const history = JSON.parse(localStorage.getItem('logs') || "[]");
-    history.unshift({ name, total: document.getElementById('totalDisplay').innerText, date: new Date().toLocaleDateString('th-TH') });
-    localStorage.setItem('logs', JSON.stringify(history.slice(0, 10)));
-    alert("Saved!");
+    const history = JSON.parse(localStorage.getItem('study_logs') || "[]");
+    history.unshift({ 
+        name, 
+        total: document.getElementById('totalDisplay').innerText, 
+        date: new Date().toLocaleString('th-TH') 
+    });
+    localStorage.setItem('study_logs', JSON.stringify(history.slice(0, 15)));
+    alert("History saved locally!");
 }
 
 function toggleHistory() {
     const m = document.getElementById('historyModal');
     m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
     if (m.style.display === 'flex') {
-        const data = JSON.parse(localStorage.getItem('logs') || "[]");
+        const data = JSON.parse(localStorage.getItem('study_logs') || "[]");
         document.getElementById('historyContent').innerHTML = data.map(d => `
-            <div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between;">
-                <span><strong>${d.name}</strong><br><small>${d.date}</small></span>
-                <strong>${d.total}</strong>
+            <div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                <span><strong>${d.name}</strong><br><small style="color:#86868b">${d.date}</small></span>
+                <strong style="font-size:18px;">${d.total}</strong>
             </div>
-        `).join('') || "No History";
+        `).join('') || "<p style='text-align:center; color:#86868b;'>No activity found.</p>";
     }
 }
