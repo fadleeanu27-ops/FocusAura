@@ -3,10 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aesthetic Focus Diary</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Premium Study Planner</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,700;1,800&family=IBM+Plex+Sans+Thai:wght@300;600&display=swap" rel="stylesheet">
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <style>
+        :root {
+            --f-main: 'Instrument Sans', sans-serif;
+            --bg: #f5f5f7;
+            --card: #ffffff;
+            --text: #1d1d1f;
+            --border: #e5e5e7;
+            --slot-empty: #fbfbfd;
+        }
+
+        .dark-mode {
+            --bg: #000000;
+            --card: #1c1c1e;
+            --text: #f5f5f7;
+            --border: #323234;
+            --slot-empty: #2c2c2e;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--f-main);
+            margin: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container { display: flex; height: 100vh; }
+
+        /* Sidebar */
+        .sidebar {
+            width: 280px; background: var(--card); border-right: 1px solid var(--border);
+            padding: 40px 24px; display: flex; flex-direction: column; justify-content: space-between;
+        }
+        .brand-zone { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .logo { font-weight: 800; font-style: italic; font-size: 22px; letter-spacing: -1px; }
+
+        .theme-toggle {
+            background: var(--bg); border: none; padding: 8px; border-radius: 12px; cursor: pointer;
+            font-size: 18px; transition: 0.3s;
+        }
+
+        .label-capsule { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: #86868b; margin-bottom: 12px; }
+
+        .add-group { display: flex; gap: 8px; margin-bottom: 20px; }
+        .add-group input { 
+            flex: 1; border: 1.5px solid var(--border); background: var(--bg); color: var(--text);
+            padding: 12px; border-radius: 14px; outline: none; font-family: var(--f-main);
+        }
+        .add-group button { background: var(--text); color: var(--card); border: none; border-radius: 14px; width: 45px; cursor: pointer; font-weight: 700; }
+
+        .subject-item { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; cursor: pointer; transition: 0.2s; font-weight: 600; font-size: 15px; }
+        .subject-item.active { background: var(--text); color: var(--card); }
+        .dot { width: 10px; height: 10px; border-radius: 3px; }
+
+        /* Main Viewport */
+        .viewport { flex: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; }
+        .planner-card { 
+            background: var(--card); width: 100%; max-width: 750px; padding: 60px; 
+            border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.03); height: fit-content; 
+        }
+
+        .name-field {
+            font-family: var(--f-main); font-weight: 800; font-style: italic; font-size: 48px;
+            letter-spacing: -3px; border: none; background: transparent; color: var(--text);
+            outline: none; width: 100%; margin-bottom: 4px;
+        }
+        .date-tag { font-weight: 700; color: #86868b; font-size: 14px; letter-spacing: 1px; }
+
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; }
+        .stat-capsule { text-align: right; background: var(--bg); padding: 16px 24px; border-radius: 20px; }
+        .stat-capsule small { font-size: 9px; font-weight: 800; color: #86868b; display: block; margin-bottom: 4px; }
+        .stat-capsule span { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: #6366f1; }
+
+        /* Grid Matrix */
+        .time-matrix { display: grid; gap: 8px; }
+        .row { display: grid; grid-template-columns: 50px 1fr; gap: 24px; align-items: center; }
+        .hour { font-size: 13px; font-weight: 700; color: #c5c5c7; font-variant-numeric: tabular-nums; }
+        .slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+        .slot { height: 34px; background: var(--slot-empty); border: 1px solid var(--border); border-radius: 4px; cursor: pointer; transition: 0.1s; }
+
+        /* Buttons */
+        .btn-primary { background: var(--text); color: var(--card); border: none; padding: 18px; border-radius: 20px; font-weight: 700; width: 100%; cursor: pointer; margin-bottom: 12px; font-family: var(--f-main); }
+        .dual-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .btn-sub { background: var(--border); color: var(--text); border: none; padding: 14px; border-radius: 16px; font-weight: 700; cursor: pointer; font-family: var(--f-main); }
+
+        .hide-row { display: none !important; }
+
+        /* Overlay */
+        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); z-index: 100; align-items: center; justify-content: center; }
+        .overlay-box { background: var(--card); padding: 40px; border-radius: 32px; width: 400px; max-height: 80vh; overflow-y: auto; color: var(--text); }
+        
+        @media no-print { .no-print { display: none !important; } }
+    </style>
 </head>
 <body class="light-mode" id="bodyApp">
 
@@ -15,10 +113,7 @@
             <div class="side-top">
                 <div class="brand-zone">
                     <div class="logo">FOCUS</div>
-                    <button onclick="toggleDarkMode()" class="theme-toggle">
-                        <span class="sun">☀️</span>
-                        <span class="moon">🌙</span>
-                    </button>
+                    <button onclick="toggleDarkMode()" class="theme-toggle">🌓</button>
                 </div>
 
                 <div class="subject-section">
@@ -45,7 +140,7 @@
                 <header class="card-header">
                     <div class="user-meta">
                         <input type="text" class="name-field" placeholder="YOUR NAME">
-                        <div class="date-tag" id="displayDate">SATURDAY, 28 FEB 2026</div>
+                        <div class="date-tag">FEBRUARY 28, 2026</div>
                     </div>
                     <div class="stat-capsule">
                         <small>TOTAL STUDY TIME</small>
@@ -53,22 +148,123 @@
                     </div>
                 </header>
 
-                <div id="gridBody" class="time-matrix">
-                    </div>
+                <div id="gridBody" class="time-matrix"></div>
             </div>
         </main>
     </div>
 
     <div id="historyModal" class="overlay no-print">
         <div class="overlay-box">
-            <div class="overlay-header">
-                <h3>History</h3>
-                <button onclick="toggleHistory()">✕</button>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="margin:0">History</h3>
+                <button onclick="toggleHistory()" style="background:none; border:none; cursor:pointer; font-size:20px; color:var(--text);">✕</button>
             </div>
-            <div id="historyContent" class="history-content"></div>
+            <div id="historyContent"></div>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        let activeColor = '#d1d1d6';
+        let totalMins = 0;
+        const aestheticPales = ['#FFDEB4', '#B2A4FF', '#FFB7B2', '#B2F2BB', '#D0EAFF', '#FDFD96', '#FFCCF9', '#C5E1A5'];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const grid = document.getElementById('gridBody');
+            for (let h = 4; h <= 23; h++) {
+                const row = document.createElement('div');
+                row.className = 'row';
+                const lbl = document.createElement('div');
+                lbl.className = 'hour';
+                lbl.innerText = `${h.toString().padStart(2, '0')}H`;
+                const slotsDiv = document.createElement('div');
+                slotsDiv.className = 'slots';
+                for (let i = 0; i < 6; i++) {
+                    const s = document.createElement('div');
+                    s.className = 'slot';
+                    s.onclick = () => {
+                        if (s.dataset.filled === "true") {
+                            s.style.backgroundColor = "";
+                            s.dataset.filled = "false";
+                            totalMins -= 10;
+                        } else {
+                            s.style.backgroundColor = activeColor;
+                            s.dataset.filled = "true";
+                            totalMins += 10;
+                        }
+                        updateTime();
+                    };
+                    slotsDiv.appendChild(s);
+                }
+                row.append(lbl, slotsDiv);
+                grid.appendChild(row);
+            }
+        });
+
+        function addSubject() {
+            const input = document.getElementById('subjectInput');
+            if (!input.value) return;
+            const color = aestheticPales[Math.floor(Math.random() * aestheticPales.length)];
+            const item = document.createElement('div');
+            item.className = 'subject-item';
+            item.innerHTML = `<div class="dot" style="background:${color}"></div> ${input.value}`;
+            item.onclick = () => {
+                document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                activeColor = color;
+            };
+            document.getElementById('subjectList').appendChild(item);
+            input.value = "";
+        }
+
+        function updateTime() {
+            const h = Math.floor(totalMins / 60);
+            const m = totalMins % 60;
+            document.getElementById('totalDisplay').innerText = `${h}H ${m.toString().padStart(2, '0')}M`;
+        }
+
+        function downloadPlanner() {
+            const rows = document.querySelectorAll('.row');
+            rows.forEach(r => {
+                if (r.querySelectorAll('.slot[data-filled="true"]').length === 0) r.classList.add('hide-row');
+            });
+            html2canvas(document.getElementById('captureArea'), { 
+                scale: 3, 
+                backgroundColor: getComputedStyle(document.getElementById('captureArea')).backgroundColor,
+                borderRadius: 40
+            }).then(canvas => {
+                const a = document.createElement('a');
+                a.download = `StudySummary.png`;
+                a.href = canvas.toDataURL();
+                a.click();
+                rows.forEach(r => r.classList.remove('hide-row'));
+            });
+        }
+
+        function toggleDarkMode() {
+            document.getElementById('bodyApp').classList.toggle('dark-mode');
+        }
+
+        function saveToHistory() {
+            const name = document.querySelector('.name-field').value || "Guest";
+            const history = JSON.parse(localStorage.getItem('study_logs') || "[]");
+            history.unshift({ name, total: document.getElementById('totalDisplay').innerText, date: new Date().toLocaleDateString('th-TH') });
+            localStorage.setItem('study_logs', JSON.stringify(history.slice(0, 10)));
+            alert("History saved!");
+        }
+
+        function toggleHistory() {
+            const m = document.getElementById('historyModal');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+            if (m.style.display === 'flex') {
+                const data = JSON.parse(localStorage.getItem('study_logs') || "[]");
+                document.getElementById('historyContent').innerHTML = data.map(d => `
+                    <div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+                        <span><strong>${d.name}</strong><br><small style="color:#86868b">${d.date}</small></span>
+                        <strong style="font-size:18px;">${d.total}</strong>
+                    </div>
+                `).join('') || "No History";
+            }
+        }
+    </script>
 </body>
 </html>
