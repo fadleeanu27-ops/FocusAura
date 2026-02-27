@@ -3,274 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Aesthetic Study Planner</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,700;1,800&family=IBM+Plex+Sans+Thai:wght@300;600&display=swap" rel="stylesheet">
-    
+    <title>Planner Fixed</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,700;1,800&family=IBM+Plex+Sans+Thai:wght@600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <style>
-        :root {
-            --f-main: 'Instrument Sans', sans-serif;
-            --f-thai: 'IBM Plex Sans Thai', sans-serif;
-            --bg: #f5f5f7;
-            --card: #ffffff;
-            --text: #1d1d1f;
-            --border: #e5e5e7;
-            --slot-empty: #fbfbfd;
-        }
-
-        .dark-mode {
-            --bg: #000000;
-            --card: #1c1c1e;
-            --text: #f5f5f7;
-            --border: #323234;
-            --slot-empty: #2c2c2e;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: var(--f-main);
-            margin: 0;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .app-container { display: flex; height: 100vh; }
-
-        /* Sidebar */
-        .sidebar {
-            width: 280px; background: var(--card); border-right: 1px solid var(--border);
-            padding: 40px 24px; display: flex; flex-direction: column; justify-content: space-between;
-        }
-        .brand-zone { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .logo { font-weight: 800; font-style: italic; font-size: 22px; letter-spacing: -1px; }
-
-        .theme-toggle {
-            background: var(--bg); border: none; padding: 8px; border-radius: 12px; cursor: pointer;
-            font-size: 18px; transition: 0.3s;
-        }
-
-        .label-capsule { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; color: #86868b; margin-bottom: 12px; }
-
-        .add-group { display: flex; gap: 8px; margin-bottom: 20px; }
-        .add-group input { 
-            flex: 1; border: 1.5px solid var(--border); background: var(--bg); color: var(--text);
-            padding: 12px; border-radius: 14px; outline: none; font-family: var(--f-main);
-        }
-        .add-group button { background: var(--text); color: var(--card); border: none; border-radius: 14px; width: 45px; cursor: pointer; font-weight: 700; }
-
-        .subject-item { display: flex; align-items: center; gap: 12px; padding: 14px; border-radius: 16px; cursor: pointer; transition: 0.2s; font-weight: 600; font-size: 15px; }
-        .subject-item.active { background: var(--text); color: var(--card); }
-        .dot { width: 10px; height: 10px; border-radius: 3px; }
-
-        /* Main Viewport */
-        .viewport { flex: 1; padding: 40px; overflow-y: auto; display: flex; justify-content: center; }
+        :root { --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --border: #e5e5e7; }
+        body { background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', sans-serif; margin: 0; }
         
-        /* เพิ่ม padding-top เพื่อกันหัวแอปโดนตัดตอนเซฟรูป */
+        .viewport { padding: 40px; display: flex; justify-content: center; }
+        
+        /* เพิ่มระยะปลอดภัยรอบๆ card */
         .planner-card { 
-            background: var(--card); width: 100%; max-width: 750px; padding: 60px; 
-            padding-top: 10px; /* เพิ่ม padding ด้านบน */
-            border-radius: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.03); height: fit-content; 
+            background: var(--card); width: 100%; max-width: 750px; 
+            padding: 80px 60px; /* เพิ่ม padding บน-ล่าง */
+            border-radius: 40px; position: relative;
         }
 
-        /* แกัตัวอักษรขาดครึ่ง: ปรับ padding-bottom และ line-height */
+        /* ส่วนที่เคยมีปัญหา: แก้โดยเพิ่มพื้นที่บรรทัด (line-height) และ padding */
         .name-field {
-            font-family: var(--f-main); font-weight: 800; font-style: italic; font-size: 48px;
-            letter-spacing: -3px; border: none; background: transparent; color: var(--text);
-            outline: none; width: 100%; margin-bottom: 4px;
-            line-height: 1.2; /* ปรับความสูงบรรทัด */
-            padding-bottom: 15px; /* เพิ่มพื้นที่ด้านล่างเพื่อกันหางโดนตัด */
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            font-weight: 800; font-style: italic; font-size: 50px;
+            letter-spacing: -2px; border: none; background: transparent; 
+            color: var(--text); outline: none; width: 100%;
+            
+            line-height: 1.6 !important; /* เพิ่มความสูงบรรทัดให้มากพอ */
+            padding-bottom: 20px !important; /* ดันพื้นที่ด้านล่างออก */
+            display: block;
         }
-        .date-tag { font-weight: 700; color: #86868b; font-size: 14px; letter-spacing: 1px; }
 
-        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 60px; }
-        .stat-capsule { text-align: right; background: var(--bg); padding: 16px 24px; border-radius: 20px; }
-        .stat-capsule small { font-size: 9px; font-weight: 800; color: #86868b; display: block; margin-bottom: 4px; }
-        .stat-capsule span { font-size: 32px; font-weight: 800; letter-spacing: -1px; color: #6366f1; }
-
-        /* Grid Slots */
-        .time-matrix { display: grid; gap: 8px; }
-        .row { display: grid; grid-template-columns: 50px 1fr; gap: 24px; align-items: center; }
-        .hour { font-size: 13px; font-weight: 700; color: #c5c5c7; font-variant-numeric: tabular-nums; }
-        .slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
-        .slot { height: 34px; background: var(--slot-empty); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; transition: 0.1s; }
-
-        /* Buttons */
-        .btn-primary { background: var(--text); color: var(--card); border: none; padding: 18px; border-radius: 20px; font-weight: 700; width: 100%; cursor: pointer; margin-bottom: 12px; font-family: var(--f-main); }
-        .dual-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .btn-sub { background: var(--border); color: var(--text); border: none; padding: 14px; border-radius: 16px; font-weight: 700; cursor: pointer; font-family: var(--f-main); }
-
-        .hide-row { display: none !important; }
-
-        /* Overlay */
-        .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); z-index: 100; align-items: center; justify-content: center; }
-        .overlay-box { background: var(--card); padding: 40px; border-radius: 32px; width: 400px; max-height: 80vh; overflow-y: auto; color: var(--text); }
+        .header-section { margin-bottom: 50px; }
+        .date-tag { font-weight: 700; color: #86868b; font-size: 14px; }
         
-        @media no-print { .no-print { display: none !important; } }
+        /* Grid */
+        .matrix { display: grid; gap: 8px; }
+        .row { display: grid; grid-template-columns: 50px 1fr; gap: 20px; align-items: center; }
+        .hour { font-size: 12px; font-weight: 700; color: #c5c5c7; }
+        .slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+        .slot { height: 32px; background: #fbfbfd; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; }
+        
+        .btn-save { 
+            position: fixed; bottom: 20px; right: 20px; 
+            background: #000; color: #fff; border: none; 
+            padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer;
+        }
+        .hide { display: none !important; }
     </style>
 </head>
-<body class="light-mode" id="bodyApp">
+<body>
 
-    <div class="app-container">
-        <aside class="sidebar no-print">
-            <div class="side-top">
-                <div class="brand-zone">
-                    <div class="logo">FOCUS</div>
-                    <button onclick="toggleDarkMode()" class="theme-toggle">🌓</button>
-                </div>
-
-                <div class="subject-section">
-                    <p class="label-capsule">SUBJECTS</p>
-                    <div class="add-group">
-                        <input type="text" id="subjectInput" placeholder="Add new...">
-                        <button onclick="addSubject()">+</button>
-                    </div>
-                    <div id="subjectList" class="subject-scroller"></div>
-                </div>
+    <div class="viewport">
+        <div id="captureArea" class="planner-card">
+            <div class="header-section">
+                <input type="text" class="name-field" placeholder="FADLEEROMDON">
+                <div class="date-tag">FEBRUARY 28, 2026</div>
             </div>
 
-            <div class="side-bottom">
-                <button onclick="downloadPlanner()" class="btn-primary">📸 Export Summary</button>
-                <div class="dual-btns">
-                    <button onclick="saveToHistory()" class="btn-sub">💾 Save</button>
-                    <button onclick="toggleHistory()" class="btn-sub">📂 Log</button>
-                </div>
-            </div>
-        </aside>
-
-        <main class="viewport">
-            <div id="captureArea" class="planner-card">
-                <header class="card-header">
-                    <div class="user-meta">
-                        <input type="text" class="name-field" placeholder="YOUR NAME">
-                        <div class="date-tag">FEBRUARY 28, 2026</div>
-                    </div>
-                    <div class="stat-capsule">
-                        <small>TOTAL STUDY TIME</small>
-                        <span id="totalDisplay">0H 00M</span>
-                    </div>
-                </header>
-
-                <div id="gridBody" class="time-matrix"></div>
-            </div>
-        </main>
-    </div>
-
-    <div id="historyModal" class="overlay no-print">
-        <div class="overlay-box">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                <h3 style="margin:0">History</h3>
-                <button onclick="toggleHistory()" style="background:none; border:none; cursor:pointer; font-size:20px; color:var(--text);">✕</button>
-            </div>
-            <div id="historyContent"></div>
+            <div id="gridBody" class="matrix"></div>
         </div>
     </div>
 
+    <button onclick="saveImage()" class="btn-save">📸 DOWNLOAD IMAGE</button>
+
     <script>
-        let activeColor = '#d1d1d6';
-        let totalMins = 0;
-        const aestheticPales = ['#FFDEB4', '#B2A4FF', '#FFB7B2', '#B2F2BB', '#D0EAFF', '#FDFD96', '#FFCCF9', '#C5E1A5'];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('gridBody');
-            for (let h = 4; h <= 23; h++) {
-                const row = document.createElement('div');
-                row.className = 'row';
-                const lbl = document.createElement('div');
-                lbl.className = 'hour';
-                lbl.innerText = `${h.toString().padStart(2, '0')}H`;
-                const slotsDiv = document.createElement('div');
-                slotsDiv.className = 'slots';
-                for (let i = 0; i < 6; i++) {
-                    const s = document.createElement('div');
-                    s.className = 'slot';
-                    s.onclick = () => {
-                        if (s.dataset.filled === "true") {
-                            s.style.backgroundColor = "";
-                            s.dataset.filled = "false";
-                            totalMins -= 10;
-                        } else {
-                            s.style.backgroundColor = activeColor;
-                            s.dataset.filled = "true";
-                            totalMins += 10;
-                        }
-                        updateTime();
-                    };
-                    slotsDiv.appendChild(s);
-                }
-                row.append(lbl, slotsDiv);
-                grid.appendChild(row);
+        // สร้างตาราง
+        const grid = document.getElementById('gridBody');
+        for (let h = 4; h <= 23; h++) {
+            const row = document.createElement('div');
+            row.className = 'row';
+            row.innerHTML = `<div class="hour">${h}H</div><div class="slots"></div>`;
+            const slots = row.querySelector('.slots');
+            for (let i = 0; i < 6; i++) {
+                const s = document.createElement('div');
+                s.className = 'slot';
+                s.onclick = () => {
+                    s.style.backgroundColor = s.style.backgroundColor ? '' : '#6366f1';
+                    s.dataset.active = s.style.backgroundColor ? 'true' : 'false';
+                };
+                slots.appendChild(s);
             }
-        });
-
-        function addSubject() {
-            const input = document.getElementById('subjectInput');
-            if (!input.value) return;
-            const color = aestheticPales[Math.floor(Math.random() * aestheticPales.length)];
-            const item = document.createElement('div');
-            item.className = 'subject-item';
-            item.innerHTML = `<div class="dot" style="background:${color}"></div> ${input.value}`;
-            item.onclick = () => {
-                document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
-                item.classList.add('active');
-                activeColor = color;
-            };
-            document.getElementById('subjectList').appendChild(item);
-            input.value = "";
+            grid.appendChild(row);
         }
 
-        function updateTime() {
-            const h = Math.floor(totalMins / 60);
-            const m = totalMins % 60;
-            document.getElementById('totalDisplay').innerText = `${h}H ${m.toString().padStart(2, '0')}M`;
-        }
-
-        function downloadPlanner() {
+        function saveImage() {
+            const area = document.getElementById('captureArea');
             const rows = document.querySelectorAll('.row');
+            
+            // ซ่อนแถวที่ว่าง
             rows.forEach(r => {
-                if (r.querySelectorAll('.slot[data-filled="true"]').length === 0) r.classList.add('hide-row');
+                if (!r.querySelector('.slot[data-active="true"]')) r.classList.add('hide');
             });
-            html2canvas(document.getElementById('captureArea'), { 
-                scale: 3, 
-                backgroundColor: getComputedStyle(document.getElementById('captureArea')).backgroundColor,
-                borderRadius: 40
+
+            html2canvas(area, {
+                scale: 3,
+                backgroundColor: "#ffffff",
+                useCORS: true,
+                logging: false,
+                // จุดสำคัญ: ขยายขอบเขตการจับภาพให้กว้างกว่าตัว card เล็กน้อย
+                x: -10,
+                y: -10,
+                width: area.offsetWidth + 20,
+                height: area.offsetHeight + 20
             }).then(canvas => {
-                const a = document.createElement('a');
-                a.download = `StudySummary.png`;
-                a.href = canvas.toDataURL();
-                a.click();
-                rows.forEach(r => r.classList.remove('hide-row'));
+                const link = document.createElement('a');
+                link.download = 'planner.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                rows.forEach(r => r.classList.remove('hide'));
             });
-        }
-
-        function toggleDarkMode() {
-            document.getElementById('bodyApp').classList.toggle('dark-mode');
-        }
-
-        function saveToHistory() {
-            const name = document.querySelector('.name-field').value || "Guest";
-            const history = JSON.parse(localStorage.getItem('study_logs') || "[]");
-            history.unshift({ name, total: document.getElementById('totalDisplay').innerText, date: new Date().toLocaleDateString('th-TH') });
-            localStorage.setItem('study_logs', JSON.stringify(history.slice(0, 10)));
-            alert("History saved!");
-        }
-
-        function toggleHistory() {
-            const m = document.getElementById('historyModal');
-            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
-            if (m.style.display === 'flex') {
-                const data = JSON.parse(localStorage.getItem('study_logs') || "[]");
-                document.getElementById('historyContent').innerHTML = data.map(d => `
-                    <div style="padding:15px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-                        <span><strong>${d.name}</strong><br><small style="color:#86868b">${d.date}</small></span>
-                        <strong style="font-size:18px;">${d.total}</strong>
-                    </div>
-                `).join('') || "No History";
-            }
         }
     </script>
 </body>
