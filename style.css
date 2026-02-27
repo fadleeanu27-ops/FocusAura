@@ -20,7 +20,9 @@ body {
     background-color: var(--bg);
     color: var(--text);
     font-family: var(--f-main);
-    margin: 0; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    -webkit-font-smoothing: antialiased;
 }
 
 .app-container { display: flex; height: 100vh; }
@@ -71,20 +73,23 @@ body {
 .stat-capsule small { font-size: 9px; font-weight: 800; color: #86868b; display: block; margin-bottom: 4px; }
 .stat-capsule span { font-size: 32px; font-weight: 800; letter-spacing: -1px; }
 
-/* ช่องตาราง (แบบเดิมที่คุณต้องการแต่ทำให้สวยขึ้น) */
+/* Grid Slots */
 .time-matrix { display: grid; gap: 8px; }
 .row { display: grid; grid-template-columns: 50px 1fr; gap: 24px; align-items: center; }
 .hour { font-size: 13px; font-weight: 700; color: #c5c5c7; font-variant-numeric: tabular-nums; }
 .slots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
 .slot { height: 34px; background: var(--slot-empty); border: 1px solid var(--border); border-radius: 2px; cursor: pointer; transition: 0.1s; }
 
-/* Buttons */
-.btn-primary { background: var(--text); color: var(--card); border: none; padding: 18px; border-radius: 20px; font-weight: 700; width: 100%; cursor: pointer; margin-bottom: 12px; }
+/* Bottom Action Buttons */
+.btn-primary { background: var(--text); color: var(--card); border: none; padding: 18px; border-radius: 20px; font-weight: 700; width: 100%; cursor: pointer; margin-bottom: 12px; font-family: var(--f-main); }
 .dual-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.btn-sub { background: var(--border); color: var(--text); border: none; padding: 14px; border-radius: 16px; font-weight: 700; cursor: pointer; }
+.btn-sub { background: var(--border); color: var(--text); border: none; padding: 14px; border-radius: 16px; font-weight: 700; cursor: pointer; font-family: var(--f-main); }
 
+/* Utility */
 .hide-row { display: none !important; }
 
-/* Modal */
+/* Modal Overlay */
 .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(12px); z-index: 100; align-items: center; justify-content: center; }
-.overlay-box { background: var(--card); padding: 40px; border-radius: 32px; width: 400px; box-shadow: 0 30px 60px rgba(0,0,0,0.1); }
+.overlay-box { background: var(--card); padding: 40px; border-radius: 32px; width: 400px; max-height: 80vh; overflow-y: auto; color: var(--text); }
+.overlay-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+.overlay-header button { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text); }
